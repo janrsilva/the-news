@@ -3,6 +3,7 @@ import { Article } from "@/services/articleServiceFactory";
 import { useApiToken } from "@/hooks/useApiToken";
 
 const useArticles = (initialQuery: string = "", initialPage: number = 1) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [token, _, getToken] = useApiToken("");
     const [query, setQuery] = useState(initialQuery);
     const [page, setPage] = useState(initialPage);
@@ -28,9 +29,13 @@ const useArticles = (initialQuery: string = "", initialPage: number = 1) => {
                 setArticles((prev) => (reset ? data : [...prev, ...data]));
                 setError(null);
                 return { data };
-            } catch (err: any) {
-                setError(err.message || "Unknown error");
-                return { error: err.message || "Unknown error" };
+            } catch (err) {
+                if (err instanceof Error) {
+                    setError(err.message || "Unknown error");
+                    return { error: err.message || "Unknown error" };
+                } else {
+                    setError("Unknown error");
+                }
             } finally {
                 setLoading(false);
             }

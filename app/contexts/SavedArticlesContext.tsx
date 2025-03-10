@@ -31,6 +31,7 @@ export const SavedArticlesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     refreshSavedArticles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const savedArticlesQtd = Object.keys(savedArticles).length;

@@ -22,11 +22,11 @@ const ApiKeyConfig: React.FC<ApiKeyConfigProps> = ({ onApiKeySave }) => {
     }
 
     const result = await searchArticles("php");
-    if (result.error) {
+    if (result?.error) {
       alert(
         "API key saved, but test request failed. Your API key may be invalid."
       );
-    } else {
+    } else if (result) {
       alert("API key saved and test request succeeded!");
     }
   };

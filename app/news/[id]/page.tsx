@@ -1,3 +1,4 @@
+// app/news/[id]/page.tsx
 import { Article } from "@/services/articleServiceFactory";
 import { ArticleServiceFactory } from "@/services/articleServiceFactory";
 import { notFound } from "next/navigation";
@@ -6,32 +7,25 @@ import PublishedAt from "@/components/PublishedAt";
 import ReadingTime from "@/components/ReadingTime";
 import Author from "@/components/Author";
 import SaveButton from "@/components/SaveButton";
-import Header from "@/components/Header";
 import Main from "@/components/Main";
 
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  const articleService = ArticleServiceFactory.createService();
-  const articles: Article[] = await articleService.searchArticles(
-    "latest",
-    1,
-    10
-  );
-
-  return articles.slice(0, 10).map((article) => ({
-    id: encodeURIComponent(article.id),
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function NewsDetailPage({
   params,
+  searchParams,
 }: {
-  params: { id?: string };
+  params: Promise<{ id?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { id } = await params;
+  const userToken = (await searchParams)["user-token"] as string;
 
-  const articleService = ArticleServiceFactory.createService();
+  // Create the article service using the token from the URL query.
+  const articleService = ArticleServiceFactory.createService(userToken, fetch);
+  if (!id) {
+    return notFound();
+  }
   const article: Article | null = await articleService.getArticleById(id);
 
   if (!article) {

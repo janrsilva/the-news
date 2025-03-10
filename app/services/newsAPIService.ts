@@ -2,6 +2,19 @@ import UnauthorizedException from "@/exceptions/UnauthorizedException";
 import { IArticleProvider, Article, HttpClient } from "./articleServiceFactory";
 import * as zlib from "zlib";
 
+type RawArticle = {
+    content: string;
+    description: string;
+    url: string;
+    urlToImage: string;
+    publishedAt: string;
+    title: string;
+    author?: string;
+    source?: {
+        name: string;
+    };
+};
+
 export class NewsAPIService implements IArticleProvider {
     private apiKey: string;
     private baseUrl = "https://newsapi.org/v2";
@@ -23,7 +36,7 @@ export class NewsAPIService implements IArticleProvider {
             const articles = this.rawToArticles(data.articles);
             return this.putIdToRawArticles(articles);
         } catch (error) {
-            if (error.toString().indexOf("Unauthorized") !== -1) {
+            if (error instanceof Error && error.toString().indexOf("Unauthorized") !== -1) {
                 throw new UnauthorizedException();
             }
             console.error("Error fetching news:", error);
@@ -65,8 +78,8 @@ export class NewsAPIService implements IArticleProvider {
         });
     }
 
-    private rawToArticles(rawArticles: any): Article[] {
-        return rawArticles.map((article: any) => {
+    private rawToArticles(rawArticles: RawArticle[]): Article[] {
+        return rawArticles.map((article: RawArticle) => {
             const match = article.content?.match(/( \[\+([0-9]+) chars\])$/);
             let size = 0;
             if (match) {
