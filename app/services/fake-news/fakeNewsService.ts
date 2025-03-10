@@ -1,6 +1,6 @@
 
-import { Article, IArticleProvider } from "@/services/newsService";
-import { fakeNewsData } from "./news";
+import { Article, IArticleProvider } from "@/services/articleServiceFactory";
+import { fakeNewsData } from "./fakeNews";
 
 export class FakeNewsService implements IArticleProvider {
     async searchArticles(query: string): Promise<Article[]> {

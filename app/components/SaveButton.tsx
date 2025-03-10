@@ -4,9 +4,9 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark as faBookmarkSolid } from "@fortawesome/free-solid-svg-icons";
 import { faBookmark as faBookmarkRegular } from "@fortawesome/free-regular-svg-icons";
-import { Article } from "@/services/newsService";
+import { Article } from "@/services/articleServiceFactory";
 import { useSavedArticles } from "@/contexts/SavedArticlesContext";
-import { PersistenceFactory } from "@/services/persistence/persistenceService";
+import { PersistenceFactory } from "@/services/persistence/persistenceServiceFactory";
 
 type SaveButtonProps = {
   article: Article;

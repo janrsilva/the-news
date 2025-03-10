@@ -1,7 +1,9 @@
 import { useState, useCallback } from "react";
-import { Article } from "@/services/newsService";
+import { Article } from "@/services/articleServiceFactory";
+import { useApiToken } from "@/hooks/useApiToken";
 
 const useArticles = (initialQuery: string = "", initialPage: number = 1) => {
+    const [token, _, getToken] = useApiToken("");
     const [query, setQuery] = useState(initialQuery);
     const [page, setPage] = useState(initialPage);
     const [articles, setArticles] = useState<Article[]>([]);
@@ -12,28 +14,35 @@ const useArticles = (initialQuery: string = "", initialPage: number = 1) => {
         async (q: string, pageNumber: number, reset = false) => {
             setLoading(true);
             try {
+                const currentToken = getToken();
                 const res = await fetch(
-                    `/api/news?query=${encodeURIComponent(q)}&page=${pageNumber}`
+                    `/api/news?query=${encodeURIComponent(q)}&page=${pageNumber}&user-token=${encodeURIComponent(currentToken)}`
                 );
                 if (!res.ok) {
+                    if (res.status === 401) {
+                        alert("Unauthorized: Your API token is invalid or expired");
+                    }
                     throw new Error("Error fetching articles");
                 }
                 const data = await res.json();
                 setArticles((prev) => (reset ? data : [...prev, ...data]));
                 setError(null);
+                return { data };
             } catch (err: any) {
                 setError(err.message || "Unknown error");
+                return { error: err.message || "Unknown error" };
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         },
-        []
+        [getToken]
     );
 
     const searchArticles = useCallback(
-        (q: string) => {
+        async (q: string) => {
             setQuery(q);
             setPage(1);
-            fetchArticles(q, 1, true);
+            return await fetchArticles(q, 1, true);
         },
         [fetchArticles]
     );

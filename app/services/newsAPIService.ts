@@ -1,17 +1,20 @@
-import { IArticleProvider, Article } from "./newsService";
+import UnauthorizedException from "@/exceptions/UnauthorizedException";
+import { IArticleProvider, Article, HttpClient } from "./articleServiceFactory";
 import * as zlib from "zlib";
 
 export class NewsAPIService implements IArticleProvider {
     private apiKey: string;
     private baseUrl = "https://newsapi.org/v2";
+    public http: HttpClient;
 
-    constructor(apiKey: string) {
+    constructor(apiKey: string, http: HttpClient) {
         this.apiKey = apiKey;
+        this.http = http;
     }
 
     async searchArticles(query: string, page: number, limit: number): Promise<Article[]> {
         try {
-            const res = await fetch(`${this.baseUrl}/everything?q=${query}&apiKey=${this.apiKey}&page=${page}&pageSize=${limit}`);
+            const res = await this.http(`${this.baseUrl}/everything?q=${query}&apiKey=${this.apiKey}&page=${page}&pageSize=${limit}`);
             if (!res.ok) {
                 throw new Error(`News API Error: ${res.statusText}`);
             }
@@ -20,6 +23,9 @@ export class NewsAPIService implements IArticleProvider {
             const articles = this.rawToArticles(data.articles);
             return this.putIdToRawArticles(articles);
         } catch (error) {
+            if (error.toString().indexOf("Unauthorized") !== -1) {
+                throw new UnauthorizedException();
+            }
             console.error("Error fetching news:", error);
             return [];
         }
@@ -38,7 +44,7 @@ export class NewsAPIService implements IArticleProvider {
 
     async listArticles(page: number, limit: number): Promise<Article[]> {
         try {
-            const res = await fetch(`${this.baseUrl}/top-headlines?country=us&apiKey=${this.apiKey}&pageSize=${limit}&page=${page}`);
+            const res = await this.http(`${this.baseUrl}/top-headlines?country=us&apiKey=${this.apiKey}&pageSize=${limit}&page=${page}`);
             if (!res.ok) {
                 throw new Error(`News API Error: ${res.statusText}`);
             }

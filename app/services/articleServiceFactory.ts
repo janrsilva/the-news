@@ -1,3 +1,6 @@
+import { NewsAPIService } from "./newsAPIService";
+import { FakeNewsService } from "./fake-news/fakeNewsService";
+
 export interface IArticleProvider {
     searchArticles: (query: string, page: number, limit: number) => Promise<Article[]>;
     getArticleById: (id: string) => Promise<Article | null>;
@@ -17,14 +20,13 @@ export interface Article {
     size: number;
 }
 
-import { NewsAPIService } from "./newsAPIService";
-import { FakeNewsService } from "./fake-news/fakeNewsService";
+export type HttpClient = typeof fetch;
 
-export class NewsServiceFactory {
-    static createService(): IArticleProvider {
+export class ArticleServiceFactory {
+    static createService(config: unknown, http: HttpClient): IArticleProvider {
         if (process.env.USE_FAKE_API === "true") {
             return new FakeNewsService();
         }
-        return new NewsAPIService(process.env.NEWS_API_KEY || "");
+        return new NewsAPIService(config as string || process.env.NEWS_API_KEY || "", http);
     }
 }

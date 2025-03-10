@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SearchBar from "./SearchBar";
@@ -46,6 +44,7 @@ const ArticlesContainer: React.FC = () => {
         onKeyDown={handleKeyDown}
         onSearch={handleSearch}
       />
+      {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       <ArticlesList articles={articles} />
       {articles.length > 0 && (

@@ -1,4 +1,4 @@
-import { Article } from "@/services/newsService";
+import { Article } from "@/services/articleServiceFactory";
 
 export interface IPersistence {
     getSavedArticles(): Record<string, Article>;

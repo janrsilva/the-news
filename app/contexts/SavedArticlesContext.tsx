@@ -1,9 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Article } from "@/services/newsService";
-import { IPersistence } from "@/services/persistence/persistence.interface";
-import { PersistenceFactory } from "@/services/persistence/persistenceService";
+import { Article } from "@/services/articleServiceFactory";
+import { IPersistence } from "@/services/persistence/persistenceInterface";
+import { PersistenceFactory } from "@/services/persistence/persistenceServiceFactory";
 
 interface SavedArticlesContextValue {
   savedArticles: Record<string, Article>;

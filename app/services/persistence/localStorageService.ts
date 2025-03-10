@@ -1,9 +1,9 @@
-import { Article } from "@/services/newsService";
-import { IPersistence } from "./persistence.interface";
+import { Article } from "@/services/articleServiceFactory";
+import { IPersistence } from "./persistenceInterface";
 
 const STORAGE_KEY = "savedArticles";
 
-export class LocalPersistenceService implements IPersistence {
+export class LocalStorageService implements IPersistence {
     getSavedArticles(): Record<string, Article> {
         if (typeof window === "undefined") return {};
         const saved = localStorage.getItem(STORAGE_KEY);

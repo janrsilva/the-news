@@ -1,7 +1,6 @@
-"use client";
+import React from "react";
 import moment from "moment-timezone";
 moment.tz.setDefault("UTC");
-import React from "react";
 
 const PublishedAt: React.FC<{ date: Date }> = ({ date }) => {
   if (!date) return null;

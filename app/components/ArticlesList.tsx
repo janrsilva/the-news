@@ -1,11 +1,10 @@
-"use client";
-
-import { Article } from "@/services/newsService";
+import React from "react";
+import { Article } from "@/services/articleServiceFactory";
 import Link from "next/link";
 import ReadingTime from "./ReadingTime";
 import SaveButton from "./SaveButton";
 
-export default function ArticlesList({ articles }: { articles: Article[] }) {
+const ArticlesList: React.FC<{ articles: Article[] }> = ({ articles }) => {
   return (
     <div className="grid gap-4 mt-4">
       {articles.map((article) => (
@@ -29,4 +28,6 @@ export default function ArticlesList({ articles }: { articles: Article[] }) {
       ))}
     </div>
   );
-}
+};
+
+export default ArticlesList;

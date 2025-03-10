@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 type SearchBarProps = {
@@ -19,7 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     <div className="flex flex-col gap-2">
       <input
         type="text"
-        placeholder="Search a topic, e.g. 'crypto', 'NFT', 'AI', etc..."
+        placeholder="Search a topic, e.g. 'crypto', 'AI', 'the best php', etc..."
         value={query}
         onChange={(e) => onQueryChange(e.target.value)}
         onKeyDown={onKeyDown}

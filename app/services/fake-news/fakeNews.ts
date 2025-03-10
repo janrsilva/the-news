@@ -1,4 +1,4 @@
-import { Article } from "@/services/newsService";
+import { Article } from "@/services/articleServiceFactory";
 
 export const fakeNewsData: Article[] = [
     {
