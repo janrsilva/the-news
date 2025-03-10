@@ -2,12 +2,17 @@ import { Article } from "@/services/newsService";
 import { NewsServiceFactory } from "@/services/newsService";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import PublishedAt from "@/components/PublishedAt";
+import ReadingTime from "@/components/ReadingTime";
+import Author from "@/components/Author";
+import SaveButton from "@/components/SaveButton";
+import Header from "@/components/Header";
 
 export const revalidate = 60;
 
 export async function generateStaticParams() {
   const newsService = NewsServiceFactory.createService();
-  const articles: Article[] = await newsService.searchNews("latest");
+  const articles: Article[] = await newsService.searchArticles("latest", 1, 10);
 
   return articles.slice(0, 10).map((article) => ({
     id: encodeURIComponent(article.id),
@@ -28,18 +33,9 @@ export default async function NewsDetailPage({
     return notFound();
   }
 
-  function estimatedReadingTime(size: number) {
-    const readingSpeedAvg = 200;
-
-    const minutes = Math.ceil(size / readingSpeedAvg);
-
-    return `${minutes}min`;
-  }
-
-  console.log(article);
-
   return (
-    <main className="p-4 flex flex-col gap-2">
+    <main className="p-4 flex flex-col gap-2 lg:w-2xl mx-auto">
+      <Header />
       <Image
         src={article.imageUrl}
         alt={article.title}
@@ -50,15 +46,17 @@ export default async function NewsDetailPage({
       <h1 className="text-2xl font-bold">{article.title}</h1>
       <p>{article.description}</p>
       <p>{article.preview}</p>
-      <p>{estimatedReadingTime(article.size)} de leitura</p>
-      <small>
-        Publicado em {article.publishedAt?.toString()}
-        {article.author && " por " + article.author}
-        {article.sourceName && " em " + article.sourceName}
-      </small>
-      <a href={article.url} className="text-blue-500" target="_blank">
-        Read full article
-      </a>
+      <ReadingTime size={article.size} />
+      <div>
+        <PublishedAt date={article.publishedAt} />
+        <Author author={article.author} sourceName={article.sourceName} />
+      </div>
+      <div className="flex justify-between">
+        <a href={article.url} className="text-blue-500" target="_blank">
+          Read full article
+        </a>
+        <SaveButton withLabel article={article} />
+      </div>
     </main>
   );
 }

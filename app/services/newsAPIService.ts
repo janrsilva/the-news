@@ -1,7 +1,7 @@
-import { INewsAPIService, Article } from "./newsService";
+import { IArticleProvider, Article } from "./newsService";
 import * as zlib from "zlib";
 
-export class NewsAPIService implements INewsAPIService {
+export class NewsAPIService implements IArticleProvider {
     private apiKey: string;
     private baseUrl = "https://newsapi.org/v2";
 
@@ -9,9 +9,9 @@ export class NewsAPIService implements INewsAPIService {
         this.apiKey = apiKey;
     }
 
-    async searchNews(query: string): Promise<Article[]> {
+    async searchArticles(query: string, page: number, limit: number): Promise<Article[]> {
         try {
-            const res = await fetch(`${this.baseUrl}/everything?q=${query}&apiKey=${this.apiKey}`);
+            const res = await fetch(`${this.baseUrl}/everything?q=${query}&apiKey=${this.apiKey}&page=${page}&pageSize=${limit}`);
             if (!res.ok) {
                 throw new Error(`News API Error: ${res.statusText}`);
             }
@@ -31,12 +31,14 @@ export class NewsAPIService implements INewsAPIService {
         const compressedBuffer = Buffer.from(contentBase64Encoded, "base64");
         const decompressedBuffer = zlib.gunzipSync(compressedBuffer);
         const content = decompressedBuffer.toString("utf-8");
-        return JSON.parse(content);
+        const article = JSON.parse(content);
+        article.id = contentBase64Encoded;
+        return article;
     }
 
-    async listNews(limit: number): Promise<Article[]> {
+    async listArticles(page: number, limit: number): Promise<Article[]> {
         try {
-            const res = await fetch(`${this.baseUrl}/top-headlines?country=us&apiKey=${this.apiKey}`);
+            const res = await fetch(`${this.baseUrl}/top-headlines?country=us&apiKey=${this.apiKey}&pageSize=${limit}&page=${page}`);
             if (!res.ok) {
                 throw new Error(`News API Error: ${res.statusText}`);
             }
@@ -69,25 +71,22 @@ export class NewsAPIService implements INewsAPIService {
             return {
                 id: '',
                 description: article.description,
-                preview: article.content,
                 url: article.url,
                 imageUrl: article.urlToImage,
                 publishedAt: new Date(article.publishedAt),
-                title: article.title,
-                author: article.author,
-                sourceName: article.source?.name,
                 size,
+                preview: article.content || "",
+                title: article.title || "",
+                author: article.author || "",
+                sourceName: article.source?.name || "",
             } as Article
         });
     }
 
     private articleToBase64(article: Article): string {
-        // Define o id como vazio para evitar circularidade
         article.id = '';
         const jsonStr = JSON.stringify(article);
-        // Comprime a string JSON utilizando gzip
         const compressedBuffer = zlib.gzipSync(jsonStr);
-        // Retorna o resultado comprimido codificado em base64
         return compressedBuffer.toString("base64");
     }
 }

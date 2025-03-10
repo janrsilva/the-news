@@ -1,35 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import NewsList from "@/components/NewsList";
+import ConfigButton from "./components/ConfigButton";
+import ScrollToTopButton from "./components/ScrollToTopButton";
+import SavedArticlesCounter from "./components/SavedArticlesCounter";
+import ArticlesContainer from "@/components/ArticlesContainer";
+import React from "react";
+import Header from "./components/Header";
 
 export default function HomePage() {
-  const [query, setQuery] = useState("");
-  const [articles, setArticles] = useState([]);
-
-  async function handleSearch() {
-    const res = await fetch(`/api/news?query=${query}`);
-    const data = await res.json();
-    setArticles(data);
-  }
-
   return (
-    <main className="p-4">
-      <input
-        type="text"
-        placeholder="Search a topic, e.g. 'crypto', 'NFT', 'AI', etc..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onSubmit={handleSearch}
-        className="border p-2 w-full"
-      />
-      <button
-        onClick={handleSearch}
-        className="bg-blue-500 text-white p-2 mt-2"
-      >
-        Search
-      </button>
-      <NewsList articles={articles} />
+    <main className="p-4 flex flex-col gap-1 lg:w-2xl mx-auto">
+      <Header />
+      <ArticlesContainer />
+      <div className="fixed bottom-16 right-4">
+        <ScrollToTopButton />
+      </div>
+      <div className="fixed bottom-0 right-0 w-full h-12 flex items-center">
+        <div className="px-4 flex items-center w-full justify-between h-full bg-gray-900 text-white text-right dark:bg-gray-600 lg:w-2xl mx-auto lg:rounded-t-2xl">
+          <ConfigButton />
+          <SavedArticlesCounter />
+        </div>
+      </div>
     </main>
   );
 }
