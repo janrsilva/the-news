@@ -10,10 +10,11 @@ interface MainProps {
 
 const Main: React.FC<MainProps> = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-grow p-4 lg:w-2xl lg:mx-auto lg:shadow">
+    <div className="min-h-screen">
+      <main className="p-4 lg:w-2xl lg:mx-auto lg:shadow">
         <Header />
         {children}
+        <div className="h-12"></div>
         <Footer />
       </main>
     </div>

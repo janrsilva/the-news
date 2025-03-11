@@ -2,17 +2,28 @@
 
 exports[`renders author and source name 1`] = `
 <div>
-  <small>
-     by Jandsu Silva
-     at Uai News
+  <small
+    class="text-right flex flex-col md:flex-row gap-1"
+  >
+    <span>
+       by Jandsu Silva
+    </span>
+    <span>
+       at Uai News
+    </span>
   </small>
 </div>
 `;
 
 exports[`renders author without source name 1`] = `
 <div>
-  <small>
-     by Jandsu Silva
+  <small
+    class="text-right flex flex-col md:flex-row gap-1"
+  >
+    <span>
+       by Jandsu Silva
+    </span>
+    <span />
   </small>
 </div>
 `;

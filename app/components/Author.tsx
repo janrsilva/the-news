@@ -5,9 +5,9 @@ const Author: React.FC<{ author: string; sourceName: string }> = ({
   sourceName,
 }) => {
   return (
-    <small>
-      {author && " by " + author}
-      {sourceName && " at " + sourceName}
+    <small className="text-right flex flex-col md:flex-row gap-1">
+      <span>{author && " by " + author}</span>
+      <span>{sourceName && " at " + sourceName}</span>
     </small>
   );
 };
