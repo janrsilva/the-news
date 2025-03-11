@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders author and source name 1`] = `
+<div>
+  <small>
+     by Jandsu Silva
+     at Uai News
+  </small>
+</div>
+`;
+
+exports[`renders author without source name 1`] = `
+<div>
+  <small>
+     by Jandsu Silva
+  </small>
+</div>
+`;

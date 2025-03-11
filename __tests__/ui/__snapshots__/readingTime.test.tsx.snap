@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`the reading time is rendered as 1 minute 1`] = `
+<div>
+  <small>
+    1
+     minutes read
+  </small>
+</div>
+`;
+
+exports[`the reading time is rendered as 1 minute 2`] = `
+<div>
+  <small>
+    1
+     minutes read
+  </small>
+</div>
+`;
+
+exports[`the reading time is rendered as 2 minutes 1`] = `
+<div>
+  <small>
+    2
+     minutes read
+  </small>
+</div>
+`;
