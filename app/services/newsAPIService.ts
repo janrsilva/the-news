@@ -27,7 +27,7 @@ export class NewsAPIService implements IArticleProvider {
 
     async searchArticles(query: string, page: number, limit: number): Promise<Article[]> {
         try {
-            const res = await this.http(`${this.baseUrl}/everything?q=${query}&apiKey=${this.apiKey}&page=${page}&pageSize=${limit}`);
+            const res = await this.http(`${this.baseUrl}/everything?q=${query}&apiKey=${this.apiKey}&page=${page}&pageSize=${limit}&sortBy=publishedAt`);
             if (!res.ok) {
                 throw new Error(`News API Error: ${res.statusText}`);
             }
