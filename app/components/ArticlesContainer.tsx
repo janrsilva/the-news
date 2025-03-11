@@ -46,6 +46,14 @@ const ArticlesContainer: React.FC = () => {
       />
       {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
+      {error && (
+        <button
+          className="text-black bg-yellow-200 dark:bg-yellow-500 text-center p-2 rounded"
+          onClick={() => router.push("/collection")}
+        >
+          <span>Click here to set your API key!</span>
+        </button>
+      )}
       <ArticlesList articles={articles} />
       {articles.length > 0 && (
         <div className="flex flex-col items-center">
